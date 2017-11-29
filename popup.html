@@ -1,0 +1,259 @@
+<!doctype html>
+<html ng-app="app" lang="en">
+  <head>
+    <title>SecureString</title>
+    <!-- Required meta tags -->
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+    <!-- Bootstrap CSS -->
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta.2/css/bootstrap.min.css" integrity="sha384-PsH8R72JQ3SOdhVi3uxftmaW6Vc51MKb0q5P2rRUpPvrszuE4W1povHYgTpBfshb" crossorigin="anonymous">
+    <script type="text/javascript" src="js.js"></script>
+
+
+  </head>
+  <style type="text/css">
+    html {
+      background: #333
+    }
+    body {
+      padding:12px;
+      border:1.5px dotted #999;
+      margin:10px;
+      min-width: 400px;
+    }
+  </style>
+  <body ng-controller="MainCtrl">
+     <p ng-show="smtog" style="float:left;"><img src="icon.png" style="width: 50px;"/> SECURE CHAIN </p>
+        <p style="float: left;
+    padding-top: 8px;
+    padding-left: 10px;" ng-show="loggedin && smtog">
+          <button  class="btn btn-sm btn-default" ng-click="toggleManager()" style="color:#999">Manage SecureChain</button> | <button  class="btn btn-sm btn-default" ng-click="toggleAS()" style="color:#999">Account</button> <button  class="btn btn-sm btn-default" ng-click="logout()" style="color:#999">Logout</button>
+        </p>
+     
+        
+        <div style="clear:both"></div>
+    <div ng-show="working">
+        <label>Loading</label>
+        <div class="progress">
+        <div class="progress-bar progress-bar-striped progress-bar-animated" role="progressbar" aria-valuenow="100" aria-valuemin="0" aria-valuemax="100" style="width: 100%"></div>
+      </div>
+    </div>
+    <div ng-show="error.on">
+         <div class="alert alert-danger" role="alert">
+      <h4 class="alert-heading">Error</h4>
+      <hr>
+      <p class="mb-0">{{ error.message }}</p>
+       <button ng-click="diserror()" class="btn-sm btn">Dismiss</button>
+    </div>
+    </div>
+    <div ng-show="alert.on">
+         <div class="alert alert-success" role="alert">
+      <h4 class="alert-heading">Success</h4>
+      <hr>
+      <p class="mb-0">{{ alert.message }}</p>
+      <button ng-click="disalert()" class="btn-sm btn">Dismiss</button>
+    </div>
+    </div>
+
+    <div ng-if="loggedin && !working && !chainmanager" class="container">
+   <div class="row">
+  <div class="col" >
+     <p></p>
+  </div>
+    <div class="col-12">
+    <div class="row">
+
+  <form style="margin:0 auto;" ng-show="smtog" ng-submit="AddtoC()">
+   <label class="breadcrumb">Add new people to your SecureChain via email.</label>
+    <div class="input-group">
+      <input type="email" class="form-control" ng-model="account.Email" placeholder="Add by email" aria-label="Add user by email">
+        <span class="input-group-btn">
+        <button class="btn btn-secondary" ng-click="AddtoC()" type="button">Add</button>
+      </span>
+    </div>
+</form>
+
+  </div>
+      <div class="row" style="margin:20px;">
+        <div class="col">
+        <button class="btn-block btn btn-lg btn-primary" ng-click="Encrypt()">Encrypt</button>
+        <button class="btn btn-sm" ng-click="ToggleSM()" ng-show="smtog">Hide</button>
+        <button class="btn btn-sm" ng-click="ToggleSM()" ng-show="!smtog">More information</button>
+        </div>
+        <div class="col">
+          <button class="btn btn-block btn-lg btn-secondary" ng-click="Decrypt()">Decrypt</button>
+        </div>
+
+      </div>
+      </div>
+     </div>
+    </div>
+
+        <div ng-if="loggedin && !working && chainmanager" class="container">
+   <div class="row">
+  <div class="col" >
+     <p><button  class="btn btn-sm btn-default" ng-click="toggleManager()" style="color:#999">Back</button>  <button  class="btn btn-sm btn-default" ng-click="toggleAS()" style="color:#999">Update account</button><br />  <button  class="btn btn-sm btn-default" ng-click="logout()" style="color:#999">Logout</button></p>
+  </div>
+    <div class="col-12">
+    <div class="row">
+  <div class="col-lg-6">
+  <form ng-submit="searchchain()">
+    <div class="input-group">
+      <input type="text" class="form-control" ng-model="search.email" placeholder="Search chain by email" aria-label="Search user by email">
+        <span class="input-group-btn">
+        <button class="btn btn-secondary" ng-click="searchchain()" type="button">Search</button>
+      </span>
+    </div>
+    </form>
+  </div>
+  </div>
+      <div class="list-group">
+        <div class="text-muted" ng-show="(chainlist.length == 0 )">No items to show here</div>
+        <div ng-repeat="email in chainlist" class="list-group-item">
+          <button class="btn btn-sm" ng-click="RemovefromC(email)" ng-disabled="working" style="float:right">Remove</button>
+            <h4>{{  email }}</h4>
+        </div>
+      </div>
+      </div>
+     </div>
+    </div>
+
+
+
+    <div ng-if="!loggedin" class="container">
+
+      <form ng-submit="jsgt()">
+  <div class="form-group">
+    <label for="exampleInputEmail1">Email address</label>
+    <input type="email" ng-disabled="working" ng-model="auth.Email" class="form-control"  aria-describedby="Enter the email you signed up with" placeholder="Enter email">
+    <small id="emailHelp" class="form-text text-muted">We'll never share your email with anyone else.</small>
+  </div>
+  <div ng-if="!resetpass"  class="form-group">
+    <label for="exampleInputPassword1">Password</label>
+    <input type="password" class="form-control" ng-disabled="working" ng-model="auth.Password" placeholder="Password">
+  </div>
+
+  <button ng-click="login()" ng-if="!resetpass" class="btn btn-primary">Login</button> 
+    <button ng-click="resetPassword()" ng-disabled="working" ng-disabled="working" ng-if="resetpass" class="btn btn-primary">Reset password</button>
+</form>
+  <p><button ng-click="LaunchJoin()" class="btn btn-sm btn-default" ng-disabled="working" style="color:#999">Join</button> | <button class="btn btn-sm btn-default" ng-click="togglepass()" ng-if="!resetpass" ng-disabled="working" style="color:#999">Reset password</button><button  class="btn btn-sm btn-default" ng-click="togglepass()" ng-disabled="working" ng-if="resetpass" style="color:#999">Login</button></p>
+
+    </div>
+
+       <div class="modal" id="AccountModal" tabindex="-1" role="dialog">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title">Manage account</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+       <div ng-show="working">
+        <label>Loading</label>
+        <div class="progress">
+        <div class="progress-bar progress-bar-striped progress-bar-animated" role="progressbar" aria-valuenow="100" aria-valuemin="0" aria-valuemax="100" style="width: 100%"></div>
+      </div>
+    </div>
+         <div ng-show="error.on">
+         <div class="alert alert-danger" role="alert">
+      <h4 class="alert-heading">Error</h4>
+      <hr>
+      <p class="mb-0">{{ error.message }}</p>
+       <button ng-click="diserror()" class="btn-sm btn">Dismiss</button>
+    </div>
+    </div>
+    <div ng-show="alert.on">
+         <div class="alert alert-success" role="alert">
+      <h4 class="alert-heading">Success</h4>
+      <hr>
+      <p class="mb-0">{{ alert.message }}</p>
+      <button ng-click="disalert()" class="btn-sm btn">Dismiss</button>
+    </div>
+    </div>
+             
+             <form  ng-submit="updatepassword()">
+             <h5>Update password</h5>
+ <div   class="form-group">
+    <label for="exampleInputPassword1">Current password</label>
+    <input type="password" class="form-control" ng-disabled="working" ng-model="account.Password" placeholder="Password">
+  </div>
+   <div   class="form-group">
+    <label for="exampleInputPassword1">New password</label>
+    <input type="password" class="form-control" ng-disabled="working" ng-model="account.Data" placeholder="Password">
+  </div>
+ <p><button type="submit" ng-disabled="working" ng-click="updatepassword()" class="btn btn-primary">Update password</button></p>
+</form>
+  <h5>Access tokens</h5>
+  <div class="list-group">
+        <div ng-repeat="token in accounttokens" class="list-group-item">
+        <button class="btn btn-sm" ng-click="DeleteToken(token)" ng-disabled="working" style="float:right">Remove</button><h4>{{ token.TokenID }}</h4>
+        <p class="text-muted text-sm"><span  style="    display: block;
+    font-size: 0.7em;" ng-if="(token.TokenID == auth.TokenID)">(Current session token)</span> Created : {{ token.Created }}</p></div>
+  </div>
+
+      </div>
+      <div class="modal-footer">
+        <button type="button" ng-disabled="working" ng-click="dismissModal1()" class="btn btn-secondary" data-dismiss="modal">Close</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+    <div class="modal" id="regModel" tabindex="-1" role="dialog">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title">Signup</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+       <div ng-show="working">
+        <label>Loading</label>
+        <div class="progress">
+        <div class="progress-bar progress-bar-striped progress-bar-animated" role="progressbar" aria-valuenow="100" aria-valuemin="0" aria-valuemax="100" style="width: 100%"></div>
+      </div>
+    </div>
+         <div ng-show="error.on">
+         <div class="alert alert-danger" role="alert">
+      <h4 class="alert-heading">Error</h4>
+      <hr>
+      <p class="mb-0">{{ error.message }}</p>
+       <button ng-click="diserror()" class="btn-sm btn">Dismiss</button>
+    </div>
+    </div>
+    <div ng-show="alert.on">
+         <div class="alert alert-success" role="alert">
+      <h4 class="alert-heading">Success</h4>
+      <hr>
+      <p class="mb-0">{{ alert.message }}</p>
+      <button ng-click="disalert()" class="btn-sm btn">Dismiss</button>
+    </div>
+    </div>
+             <form ng-submit="join()">
+  <div class="form-group">
+    <label for="exampleInputEmail1">Email address</label>
+    <input type="email" ng-model="auth.Email" ng-disabled="working" class="form-control"  aria-describedby="Enter the email you signed up with" placeholder="Enter email">
+     <small id="emailHelp"  class="form-text text-muted">Your login password will be sent to this inbox.</small>
+    <small id="emailHelp" class="form-text text-muted">We'll never share your email with anyone else.</small>
+  </div>
+
+</form>
+      </div>
+      <div class="modal-footer">
+        <button type="button" ng-disabled="working" ng-click="join()" class="btn btn-primary">Join</button>
+        <button type="button" ng-disabled="working" ng-click="dismissModal1()" class="btn btn-secondary" data-dismiss="modal">Close</button>
+      </div>
+    </div>
+  </div>
+</div>
+    <!-- Optional JavaScript -->
+    <!-- jQuery first, then Popper.js, then Bootstrap JS -->
+    <script type="text/javascript" src="jqbspp.js"></script>
+
+  </body>
+</html>
