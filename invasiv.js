@@ -44,10 +44,17 @@ if (typeof(window.jQuery) == "undefined"){
   var bindEdTags = function(){
     function edtt(jqob){
     jqob.hover(  function() {
-      $(".encrypt-prmpt-sccc").remove()
-    $( "<button style='position:relative; top:-10pxp;padding: 10px;background: #333;color: #fff;' class='encrypt-prmpt-sccc' >Encrypt</button>" ).click(function(){
+      $("button.encrypt-prmpt-sccc").each(function(){
+        $(this).remove()
+      });
+      var text = jqob.html()
+      var eod = "Encrypt"
+      if ( text.includes("@{") ) {
+        eod = "Decrypt"
+      }
+    $( "<button style='position:relative; top:-10px;padding: 10px;background: #333;color: #fff;z-index:5000;' class='encrypt-prmpt-sccc' >" +eod + "</button>" ).click(function(){
 
-   var text = jqob.html()
+   
     jsrequestmomentuminterfacer("https://sc.gophersauce.com/momentum/funcs?name=" + (!text.includes("@{") ? "Encrypt" : "Decrypt"), {req:{Data : text}, token: token }, "POSTJSON", function(data,success){
       if (!success){
         alert("Error sending data, try again")
@@ -67,10 +74,17 @@ if (typeof(window.jQuery) == "undefined"){
     }
      function edttinput(jqob){
      jqob.hover(  function() {
-      $(".encrypt-prmpt-sccc", jqob).remove()
-  $( "<button style='position:relative; top:-10px' class='encrypt-prmpt-sccc' >Encrypt</button>" ).click(function(){
+        $("button.encrypt-prmpt-sccc").each(function(){
+        $(this).remove()
+      });
+        var text = jqob.val()
+        var eod = "Encrypt"
+      if ( text.includes("@{") ) {
+        eod = "Decrypt"
+      }
+  $( "<button style='position:relative; top:-10px;padding: 10px;background: #333;color: #fff;z-index:5000' class='encrypt-prmpt-sccc' >" + eod +"</button>" ).click(function(){
 
-    var text = jqob.val()
+    
     jsrequestmomentuminterfacer("https://sc.gophersauce.com/momentum/funcs?name=" + ( !text.includes("@{") ? "Encrypt" : "Decrypt"), {req:{Data : text}, token: token }, "POSTJSON", function(data,success){
       if (!success){
         alert("Error sending data, try again")
