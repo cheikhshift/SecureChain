@@ -14,7 +14,7 @@ Reverse the same process except click on Decrypt instead of Encrypt.Make sure yo
 - Encrypt and replace texts from textarea. Invasive mode sort of fixes this. Allows encryption of DOM HTML (div with contenteditable attribute, input and textareas.
 
 ## Bugs
-- Currently supports encrypting one paragaph.
+- Currently supports encrypting one paragaph if you're not in invasive mode.
 
 ## Software used :
 - TwitterBootstap 4.0 beta
