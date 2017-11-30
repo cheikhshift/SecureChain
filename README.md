@@ -10,17 +10,17 @@ Select HTML within a page, click on the SecureChain google chrome extension, cli
 Reverse the same process except click on Decrypt instead of Encrypt.Make sure you've deselected and selected the string again, if it's the same one.
 
 ## Todo :
-- Document API for other uses.
-- Encrypt and replace texts from textarea. Invasive mode sort of fixes this. Allows encryption of DOM HTML (div with contenteditable,input and textareas
+- Document API for other uses. * Done. Find API docs [here](https://sc.gophersauce.com/api)
+- Encrypt and replace texts from textarea. Invasive mode sort of fixes this. Allows encryption of DOM HTML (div with contenteditable attribute, input and textareas.
 
 ## Bugs
 - Currently supports encrypting one paragaph.
-- Plugin does not support encrypting multiple selected DOM elements.
 
 ## Software used :
 - TwitterBootstap 4.0 beta
 - AngularJS
 - ape-js : A custom package I made to develop faster with AngularJS.
+- GopherSauce (With Momentum).
 
 ### Source info
 Description of files relative to the root of this repository :
