@@ -11,7 +11,7 @@ Reverse the same process except click on Decrypt instead of Encrypt.Make sure yo
 
 ## Todo :
 - Document API for other uses.
-- Encrypt and replace texts from textarea.
+- Encrypt and replace texts from textarea. Invasive mode sort of fixes this. Allows encryption of DOM HTML (div with contenteditable,input and textareas
 
 ## Bugs
 - Currently supports encrypting one paragaph.
