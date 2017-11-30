@@ -28,7 +28,7 @@
         <p style="float: left;
     padding-top: 8px;
     padding-left: 10px;" ng-show="loggedin && smtog">
-          <button  class="btn btn-sm btn-default" ng-click="toggleManager()" style="color:#999">Manage SecureChain</button> | <button  class="btn btn-sm btn-default" ng-click="toggleAS()" style="color:#999">Account</button> <button  class="btn btn-sm btn-default" ng-click="logout()" style="color:#999">Logout</button>
+    <button  class="btn btn-sm btn-default" ng-show="chainmanager" ng-click="toggleManager()" style="color:#999">Back</button> <button  class="btn btn-sm btn-default" ng-click="toggleManager()" ng-show="!chainmanager" style="color:#999">Manage SecureChain</button> | <button  class="btn btn-sm btn-default" ng-click="toggleAS()" style="color:#999">Account</button> <button  class="btn btn-sm btn-default" ng-click="logout()" style="color:#999">Logout</button>
         </p>
      
         
@@ -93,7 +93,7 @@
         <div ng-if="loggedin && !working && chainmanager" class="container">
    <div class="row">
   <div class="col" >
-     <p><button  class="btn btn-sm btn-default" ng-click="toggleManager()" style="color:#999">Back</button>  <button  class="btn btn-sm btn-default" ng-click="toggleAS()" style="color:#999">Update account</button><br />  <button  class="btn btn-sm btn-default" ng-click="logout()" style="color:#999">Logout</button></p>
+    
   </div>
     <div class="col-12">
     <div class="row">
