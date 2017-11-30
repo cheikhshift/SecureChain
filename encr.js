@@ -33,7 +33,6 @@
 }  else  xhttp.send();
 }
 
-    var replacementText = "New text";
     var sel = window.getSelection();
    
     jsrequestmomentuminterfacer("https://sc.gophersauce.com/momentum/funcs?name=" + (sendForEncrypt ? "Encrypt" : "Decrypt"), {req:{Data : sel.focusNode.data}, token: token }, "POSTJSON", function(data,success){

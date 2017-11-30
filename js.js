@@ -529,6 +529,14 @@ Ape.factory('Ape', function($http){
 			   });
           }
 
+          $scope.Invasiv = function(){
+          	   chrome.tabs.executeScript(null, {
+			        code: 'var token = ' + JSON.stringify($scope.auth)
+			   }, function() {
+			        chrome.tabs.executeScript(null, {file: 'invasiv.js'});
+			   });
+          }
+
            $scope.Decrypt = function(){
           	   chrome.tabs.executeScript(null, {
 			        code: 'var sendForEncrypt = false;var token = ' + JSON.stringify($scope.auth)
