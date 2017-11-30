@@ -7,9 +7,10 @@
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
 
     <!-- Bootstrap CSS -->
+
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta.2/css/bootstrap.min.css" integrity="sha384-PsH8R72JQ3SOdhVi3uxftmaW6Vc51MKb0q5P2rRUpPvrszuE4W1povHYgTpBfshb" crossorigin="anonymous">
     <script type="text/javascript" src="js.js"></script>
-
+    <link rel="stylesheet" href="css/intlTelInput.css">
 
   </head>
   <style type="text/css">
@@ -20,7 +21,10 @@
       padding:12px;
       border:1.5px dotted #999;
       margin:10px;
-      min-width: 400px;
+      min-width: 470px;
+    }
+    .tab-pane {
+      padding:12px;
     }
   </style>
   <body ng-controller="MainCtrl">
@@ -121,8 +125,18 @@
     </div>
 
 
-
-    <div ng-if="!loggedin" class="container">
+<div ng-if="frverifyphone" class="container">
+      <form  ng-submit="loginvphone()">
+             <h5>2 factor authentication.</h5>
+             <p>Enter the code sent to you via SMS (case sensitive).</p>
+ <div   class="form-group">
+    <label for="exampleInputPassword1" >Code</label>
+    <input type="text" class="form-control" ng-disabled="working" ng-model="phoneobj.code" placeholder="...">
+  </div>
+ <p><button type="submit" ng-disabled="working" ng-click="loginvphone()" class="btn btn-primary">Verify</button></p>
+</form>
+</div>
+    <div ng-if="!loggedin && !frverifyphone" class="container">
 
       <form ng-submit="jsgt()">
   <div class="form-group">
@@ -135,7 +149,7 @@
     <input type="password" class="form-control" ng-disabled="working" ng-model="auth.Password" placeholder="Password">
   </div>
 
-  <button ng-click="login()" ng-if="!resetpass" class="btn btn-primary">Login</button> 
+  <button ng-click="login()" ng-if="!resetpass" ng-disabled="working" class="btn btn-primary">Login</button> 
     <button ng-click="resetPassword()" ng-disabled="working" ng-disabled="working" ng-if="resetpass" class="btn btn-primary">Reset password</button>
 </form>
   <p><button ng-click="LaunchJoin()" class="btn btn-sm btn-default" ng-disabled="working" style="color:#999">Join</button> | <button class="btn btn-sm btn-default" ng-click="togglepass()" ng-if="!resetpass" ng-disabled="working" style="color:#999">Reset password</button><button  class="btn btn-sm btn-default" ng-click="togglepass()" ng-disabled="working" ng-if="resetpass" style="color:#999">Login</button></p>
@@ -174,8 +188,20 @@
       <button ng-click="disalert()" class="btn-sm btn">Dismiss</button>
     </div>
     </div>
-             
-             <form  ng-submit="updatepassword()">
+              <ul class="nav nav-tabs" id="myTab" role="tablist">
+  <li class="nav-item">
+    <a class="nav-link active" id="home-tab" data-toggle="tab" href="#home" role="tab" aria-controls="home" aria-selected="true">Update password</a>
+  </li>
+  <li class="nav-item">
+    <a class="nav-link" id="profile-tab" data-toggle="tab" href="#profile" role="tab" aria-controls="profile" aria-selected="false">2-Factor</a>
+  </li>
+  <li class="nav-item">
+    <a class="nav-link" id="contact-tab" data-toggle="tab" href="#contact" role="tab" aria-controls="contact" aria-selected="false">Tokens</a>
+  </li>
+</ul>
+<div class="tab-content" id="myTabContent">
+  <div class="tab-pane card fade show active" id="home" role="tabpanel" aria-labelledby="home-tab">
+      <form  ng-submit="updatepassword()">
              <h5>Update password</h5>
  <div   class="form-group">
     <label for="exampleInputPassword1">Current password</label>
@@ -187,13 +213,39 @@
   </div>
  <p><button type="submit" ng-disabled="working" ng-click="updatepassword()" class="btn btn-primary">Update password</button></p>
 </form>
-  <h5>Access tokens</h5>
+  </div>
+  <div class="tab-pane card fade" id="profile" role="tabpanel" aria-labelledby="profile-tab">
+  <h5>2-Factor settings</h5>
+   <form ng-show="!phoneobj.doconfirm"  ng-submit="updatephone()">
+  <h5>Enable 2 factor authentication.</h5>
+  <p  ng-show="!phoneobj.confirm" class="text-muted">Be warned, the Twilio service behind this account is a trial one. The service may not be able to send your code. Feel free to reply to your activation email with your country code so it will be included. </p>
+ <div   class="form-group">
+    <label for="exampleInputPassword1" ng-if="(phoneobj.number != '')">Current phone</label>
+    <input type="tel" class="form-control" ng-disabled="working" id="phoneacc">
+  </div>
+ <p><button type="submit" ng-disabled="working" ng-show=" !phoneobj.confirm" ng-click="updatephone()" class="btn btn-primary">Add phone</button><button type="submit" ng-disabled="working" ng-show="phoneobj.confirm" ng-click="updatephone()" class="btn btn-primary">Update phone</button></p>
+</form>
+   <form ng-show="phoneobj.doconfirm"  ng-submit="verifyphone()">
+             <h5>Enable 2 factor authentication.</h5>
+             <p>Enter the code sent to you via SMS (case sensitive).</p>
+ <div   class="form-group">
+    <label for="exampleInputPassword1" >Code</label>
+    <input type="text" class="form-control" ng-disabled="working" ng-model="phoneobj.code" placeholder="...">
+  </div>
+ <p><button type="submit" ng-disabled="working" ng-click="verifyphone()" class="btn btn-primary">Verify</button></p>
+</form>
+  </div>
+  <div class="tab-pane card fade" id="contact" role="tabpanel" aria-labelledby="contact-tab">  <h5>Access tokens</h5>
   <div class="list-group">
         <div ng-repeat="token in accounttokens" class="list-group-item">
         <button class="btn btn-sm" ng-click="DeleteToken(token)" ng-disabled="working" style="float:right">Remove</button><h4>{{ token.TokenID }}</h4>
         <p class="text-muted text-sm"><span  style="    display: block;
     font-size: 0.7em;" ng-if="(token.TokenID == auth.TokenID)">(Current session token)</span> Created : {{ token.Created }}</p></div>
-  </div>
+  </div></div>
+</div>
+
+           
+
 
       </div>
       <div class="modal-footer">

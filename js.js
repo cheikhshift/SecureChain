@@ -397,10 +397,35 @@ Ape.factory('Ape', function($http){
           $scope.chainmanager = false;
           $scope.ReqHeaders = {'Content-Type': 'application/json'}
           $scope.search = {email : ""}
+          $scope.frverifyphone = false;
+          $scope.phoneobj = {number: "",doconfirm:false,confirm:false}
           $scope.diserror = function(){
           	$scope.error.on = false;
           }
 
+           $("#phoneacc").intlTelInput();
+           $scope.updatephone = function(){
+           	if ($scope.working) return;
+           	var intlNumber = $("#phoneacc").intlTelInput("getNumber");
+            
+           	$scope.phoneobj.number = intlNumber;
+           		Ape.Request("POST", "UPhone", {token: $scope.auth,phn: $scope.phoneobj.number} , function(data){
+            		if (data && data.resp.Code == 200) {
+            			$scope.phoneobj.doconfirm = true;
+            			$scope.phoneobj.confirm = false;
+            		}
+            	})
+           }
+           $scope.verifyphone = function(){
+           	if ($scope.working) return;
+           			Ape.Request("POST", "VPhone", {token: $scope.auth,code: $scope.phoneobj.code} , function(data){
+            		if (data && data.resp.Code == 200) {
+            			$scope.phoneobj.doconfirm = false;
+            			$scope.phoneobj.confirm = true;
+            			$scope.phoneobj.code = "";
+            		}
+            	})
+           }
           $scope.searchchain = function(){
           	Ape.Request("POST", "GetChain", {token: $scope.auth} , function(data){
             	if (data && data.resp.Code == 200) {
@@ -447,20 +472,36 @@ Ape.factory('Ape', function($http){
               } 
           })
           //$scope.loggedin = true
-          console.log($scope.auth)
+          
           $scope.login = function(){
+          	if ($scope.working) return;
           	  Ape.Request("POST", "Login", {req: $scope.auth } , function(data){
           	  		window.localStorage["email"] = $scope.auth.Email;
             	if(data && data.resp.Code == 200){
             		$scope.loggedin = true
             		window.localStorage['ssauthdata'] = JSON.stringify(data.resp.Result)
             		$scope.auth = data.resp.Result;
+            	} else if (data.resp.Code == 202){
+            		$scope.frverifyphone = true
+            		$scope.phoneobj.id = data.resp.Result
+            		$scope.phoneobj.code = ""
             	}
           	});
           }
 
-          $scope.resetPassword = function(){
+          $scope.loginvphone = function(){
+            Ape.Request("POST", "LoginVPhone", {userid: $scope.phoneobj.id, code: $scope.phoneobj.code} , function(data){
+            	if (data && data.resp.Code == 200) {
+            		$scope.loggedin = true
+            		window.localStorage['ssauthdata'] = JSON.stringify(data.resp.Result)
+            		$scope.auth = data.resp.Result;
+            		$scope.frverifyphone = false;
+            	}
+          	});        	
+          }
 
+          $scope.resetPassword = function(){
+          	if ($scope.working) return;
           	 Ape.Request("POST", "ForgotPassword", {req: $scope.auth } , function(data){
             	
           	});
@@ -549,6 +590,14 @@ Ape.factory('Ape', function($http){
           	 Ape.Request("POST", "Tokens", {token: $scope.auth} , function(data){
             	if (data && data.resp.Code == 200) {
             		$scope.accounttokens = data.resp.Result
+            	}
+          	});
+
+          	Ape.Request("POST", "FAST", {token: $scope.auth} , function(data){
+            	if (data && data.resp.Code == 200) {
+            		$scope.phoneobj.confirm = data.resp.Result.confirm;
+            		$scope.phoneobj.number = data.resp.Result.number;
+            		$("#phoneacc").intlTelInput("setNumber", $scope.phoneobj.number)
             	}
           	});
           	 $("#AccountModal").modal('toggle');
