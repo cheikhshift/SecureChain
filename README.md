@@ -1,5 +1,6 @@
 # SecureChain
 Sources and compiled version of SecureChain chrome extension
+Find command line tools [here](https://github.com/cheikhshift/go-securechain).
 
 # Premise
 Each user has an account. You can decrypt and encrypt any of your messages. You may decrypt messages from other people if your account email is on their SecureChain. A SecureChain is a list of trust-worthy contacts who can decrypt your SecureChain strings.
