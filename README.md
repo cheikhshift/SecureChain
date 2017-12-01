@@ -17,7 +17,7 @@ Reverse the same process except click on Decrypt instead of Encrypt.Make sure yo
 - Currently supports encrypting one paragaph if you're not in invasive mode.
 
 ## Software used :
-- TwitterBootstap 4.0 beta
+- TwitterBootstrap 4.0 beta
 - AngularJS
 - ape-js : A custom package I made to develop faster with AngularJS.
 - GopherSauce (With Momentum).
