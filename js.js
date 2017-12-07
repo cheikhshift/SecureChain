@@ -548,7 +548,7 @@ Ape.factory('Ape', function($http){
           $scope.RemovefromC = function(email){
           	 Ape.Request("POST", "RemoveFromChain", {token: $scope.auth,email : email} , function(data){
             	if (data && data.resp.Code == 200) {
-            		$scope.chainlist.split( $scope.chainlist.indexOf(email), 1)
+            		$scope.chainlist.splice( $scope.chainlist.indexOf(email), 1)
             	}
           	});
           }
